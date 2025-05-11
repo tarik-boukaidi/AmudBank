@@ -46,9 +46,13 @@ header {
     align-items: center;
 }
 
-.logo i {
+.logo img {
     margin-right: 10px;
     color: var(--secondary-color);
+    height: 50px;
+    width:auto;       
+    font-weight: bold;
+    vertical-align: middle;
 }
 
 nav ul {
@@ -334,9 +338,8 @@ nav ul li a:hover {
     background-color: #d5dbdb;
 }
 
-.tab-content {
-    display: none;
-}
+
+
 
 .tab-content.active {
     display: block;

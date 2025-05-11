@@ -94,8 +94,10 @@ class AdminController extends Controller
     
         if (!$nomFound || !$prenomFound || !$cinFound) {
             unlink($path);
+
             return response()->json([
                 'success' => false,
+                'text' => $text,
                 'errors' => ['cin_image' => 'Vos informations saisies ne correspondent pas aux informations de votre carte']
             ], 422);
         }
@@ -122,50 +124,73 @@ class AdminController extends Controller
     }
     public function createNewBankAccount(Request $request){
         $user = Auth::user();
+        $typeCarte = in_array($request->type_compte, ['courant', 'epargne']) ? 'mastercard' : 'visa';
+        if ($request->type_compte == 'courant') {
+            $plafond = 5000.00;
+        } elseif ($request->type_compte == 'epargne') {
+            $plafond = 1000.00;
+        } else {
+            $plafond = 10000.00;
+        }
         $compte=Compte::create([
             'user_id' => $user->id,
             'type_compte' => $request->type_compte,
             'solde' => 0,
             'statut' => 'actif',
-            'date_ouverture' => now(),
-        ]);
-        $this->createCard($compte);
-        return redirect()->route('client')->with('success', 'Compte bancaire créé avec succès.');
+            'numero_compte' => rand(1000000, 9999999),
+            'numero_carte' => implode(' ', str_split(rand(1000000000000000, 9999999999999999), 4)),
+            'type_carte' => $typeCarte,
+            'date_expiration' => now()->addYears(5)->format('m/y'),
+            'etat' => 'active',
+            'plafond_journalier' => $plafond,
+            'code_securite' => bcrypt(rand(1000, 9999)),
+            ]);
+
+        session(['compteAddionelle' => $request->type_compte]);
+
+        return redirect()->route('accounts')->with('success', 'Compte bancaire créé avec succès.');
     }
     protected function createBankAccount(User $user)
-{
+{   
     return Compte::create([
+
         'user_id' => $user->id,
         'type_compte' => 'courant', 
         'solde' => 0, 
         'statut' => 'actif',
-        'date_ouverture' => now(),
-    ]);
-}
-protected function createCard(Compte $compte)
-{
-    $typeCarte = in_array($compte->type_compte, ['courant', 'epargne']) ? 'mastercard' : 'visa';
-
-    if ($compte->type_compte == 'courant') {
-        $plafond = 5000.00;
-    } elseif ($compte->type_compte == 'epargne') {
-        $plafond = 1000.00;
-    } else {
-        $plafond = 10000.00;
-    }
-
-    return Carte::create([
-        'compte_id' => $compte->id,
         'numero_compte' => rand(1000000, 9999999),
-        'numero_carte' => rand(1000000000000000, 9999999999999999),
-        'type_carte' => $typeCarte,
-        'date_expiration' => now()->addYears(5)->endOfMonth()->format('Y-m-d'),
+        'numero_carte' => implode(' ', str_split(rand(1000000000000000, 9999999999999999), 4)),
+        'type_carte' => 'mastercard',
+        'date_expiration' => now()->addYears(5)->format('m/y'),
         'etat' => 'active',
-        'date_creation' => now(),
-        // 'plafond_journalier' => $plafond,
+        'plafond_journalier' => 5000.00,
         'code_securite' => bcrypt(rand(1000, 9999)),
     ]);
 }
+// protected function createCard(Compte $compte)
+// {
+//     $typeCarte = in_array($compte->type_compte, ['courant', 'epargne']) ? 'mastercard' : 'visa';
+
+//     if ($compte->type_compte == 'courant') {
+//         $plafond = 5000.00;
+//     } elseif ($compte->type_compte == 'epargne') {
+//         $plafond = 1000.00;
+//     } else {
+//         $plafond = 10000.00;
+//     }
+    
+
+//     return Carte::create([
+//         'compte_id' => $compte->id,
+//         'numero_compte' => rand(1000000, 9999999),
+//         'numero_carte' => implode(' ', str_split(rand(1000000000000000, 9999999999999999), 4)),
+//         'type_carte' => $typeCarte,
+//         'date_expiration' => now()->addYears(5)->format('m/y'),
+//         'etat' => 'active',
+//         'plafond_journalier' => $plafond,
+//         'code_securite' => bcrypt(rand(1000, 9999)),
+//     ]);
+// }
 
 
 
@@ -196,7 +221,7 @@ protected function createCard(Compte $compte)
             'email_verified_at' => now(),
         ]);
         $compte=$this->createBankAccount($user);
-        $this->createCard($compte);
+        // $this->createCard($compte);
 
         Auth::login($user);
     
@@ -265,8 +290,7 @@ protected function createCard(Compte $compte)
             $user->password = Hash::make($request->new_password);
         }
         $user->save();
-
-        return redirect()->route('client')->with('success', 'Profile updated successfully.');
+        return redirect()->route('settings')->with('success', 'Profile updated successfully.');
         
     }
     public function cartesBancaires(Request $request)

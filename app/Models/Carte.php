@@ -14,7 +14,7 @@ class Carte extends Model
         'code_securite',
         'etat',
         'date_creation',
-        // 'plafond_journalier',
+        'plafond_journalier',
         'code_pin'
     ];
 

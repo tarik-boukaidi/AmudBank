@@ -16,9 +16,14 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('type_compte', ['courant', 'epargne', 'professionnel']);
             $table->decimal('solde', 15, 2)->default(0);
-            $table->enum('statut', ['actif', 'suspendu', 'fermé'])->default('actif');
-            $table->date('date_ouverture');
-            $table->timestamps(); // created_at et updated_at
+            $table->enum('statut', ['actif', 'suspendu', 'fermé','expirée'])->default('actif');
+            $table->string('numero_compte')->unique(); 
+            $table->string('numero_carte')->unique();
+            $table->enum('type_carte', ['Visa', 'MasterCard', 'Autre']);
+            $table->string('date_expiration');
+            $table->string('code_securite'); 
+            $table->decimal('plafond_journalier', 10, 2); 
+            $table->timestamps(); 
         });
     }
     
