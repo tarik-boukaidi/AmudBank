@@ -614,15 +614,15 @@ body {
         <div class="container">
             <div class="logo">
                 <i class="fas fa-university"></i>
-                <span>Banque Connect</span>
+                <span>AmudBank</span>
             </div>
             <div class="nav-links">
                 <a href="#features">Fonctionnalités</a>
                 <a href="#security">Sécurité</a>
                 <a href="#pricing">Tarifs</a>
                 <a href="#contact">Contact</a>
-                <a href="login.html" class="btn btn-outline">Connexion</a>
-                <a href="/login" class="btn btn-primary">Ouvrir un compte</a>
+                <a href="{{ route('login') }}" class="btn btn-outline">Connexion</a>
+                <a href="{{ route('register_step1') }}" class="btn btn-primary">Ouvrir un compte</a>
             </div>
             <button class="menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -637,7 +637,7 @@ body {
                 <h1>Votre banque 100% digitale</h1>
                 <p class="subtitle">Gérez votre argent simplement, où que vous soyez, avec une sécurité bancaire de niveau premium.</p>
                 <div class="cta-buttons">
-                    <a href="/login" class="btn btn-primary btn-large">Ouvrir un compte <i class="fas fa-arrow-right"></i></a>
+                    <a href="{{ route('register_step1') }}" class="btn btn-primary btn-large">Ouvrir un compte <i class="fas fa-arrow-right"></i></a>
                     <a href="#demo" class="btn btn-secondary btn-large">Voir la démo <i class="fas fa-play-circle"></i></a>
                 </div>
                 <div class="app-stores">
@@ -655,7 +655,7 @@ body {
                 </div>
             </div>
             <div class="hero-image">
-                <img src="https://cdn-icons-png.flaticon.com/512/2638/2638031.png" alt="Application mobile Banque Connect">
+                <img src="https://cdn-icons-png.flaticon.com/512/2638/2638031.png" alt="Application mobile AmudBank">
                 <div class="card-animation">
                     <div class="card card-1">
                         <div class="card-chip">
@@ -685,7 +685,7 @@ body {
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="container">
-            <h2 class="section-title">Pourquoi choisir Banque Connect ?</h2>
+            <h2 class="section-title">Pourquoi choisir AmudBank ?</h2>
             <p class="section-subtitle">Découvrez nos services innovants conçus pour simplifier votre vie bancaire</p>
 
             <div class="features-grid">
@@ -794,12 +794,12 @@ body {
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                     </div>
-                    <p class="testimonial-text">"Je suis passé à Banque Connect il y a un an et je ne regrette absolument pas. L'interface est intuitive et le service client réactif."</p>
+                    <p class="testimonial-text">"Je suis passé à AmudBank il y a un an et je ne regrette absolument pas. L'interface est intuitive et le service client réactif."</p>
                     <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sophie Martin">
+                        <img src="walid.jpeg" alt="Sophie Martin">
                         <div>
-                            <h4>Sophie Martin</h4>
-                            <span>Entrepreneure</span>
+                            <h4>Walid lebhir</h4>
+                            <span>Software Engineer</span>
                         </div>
                     </div>
                 </div>
@@ -814,10 +814,10 @@ body {
                     </div>
                     <p class="testimonial-text">"Les virements instantanés ont changé ma façon de gérer mon entreprise. Plus besoin d'attendre 24h pour que les transactions soient effectives."</p>
                     <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Thomas Leroy">
+                        <img src="youssef.jpeg" alt="Thomas Leroy">
                         <div>
-                            <h4>Thomas Leroy</h4>
-                            <span>Freelance</span>
+                            <h4>Youssef El Kahlaoui</h4>
+                            <span>Data Scientists</span>
                         </div>
                     </div>
                 </div>
@@ -830,7 +830,7 @@ body {
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                     </div>
-                    <p class="testimonial-text">"En tant qu'expatrié, Banque Connect m'a permis de gérer facilement mes comptes en plusieurs devises avec des frais très compétitifs."</p>
+                    <p class="testimonial-text">"En tant qu'expatrié, AmudBank m'a permis de gérer facilement mes comptes en plusieurs devises avec des frais très compétitifs."</p>
                     <div class="testimonial-author">
                         <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Camille Dubois">
                         <div>
@@ -849,8 +849,8 @@ body {
             <h2>Prêt à révolutionner votre expérience bancaire ?</h2>
             <p>Ouvrez un compte en moins de 5 minutes et profitez de tous nos services dès aujourd'hui.</p>
             <div class="cta-buttons">
-                <a href="{{ route('login') }}" class="btn btn-primary btn-large">Ouvrir un compte</a>
-                <a href="/register" class="btn btn-secondary btn-large">Se connecter</a>
+                <a href="{{ route('register_step1') }}" class="btn btn-primary btn-large">Ouvrir un compte</a>
+                <a href="{{ route('login') }}" class="btn btn-secondary btn-large">Se connecter</a>
             </div>
         </div>
     </section>
@@ -862,7 +862,7 @@ body {
                 <div class="footer-col">
                     <div class="logo">
                         <i class="fas fa-university"></i>
-                        <span>Banque Connect</span>
+                        <span>AmudBank</span>
                     </div>
                     <p>La banque 100% digitale qui simplifie votre vie financière avec des solutions innovantes et sécurisées.</p>
                     <div class="social-links">
@@ -908,7 +908,7 @@ body {
             </div>
 
             <div class="footer-bottom">
-                <p>© 2025 Banque Connect. Tous droits réservés.</p>
+                <p>© 2025 AmudBank. Tous droits réservés.</p>
                 <div class="footer-links">
                     <a href="#">Confidentialité</a>
                     <a href="#">Conditions d'utilisation</a>

@@ -20,15 +20,34 @@ class Compte extends Model
         'date_expiration',
         'code_securite',
         'plafond_journalier',
+        'rip',
+        'Code_guichet',
     ];
+    public static function generateRib()
+    {
+        $rib = '288';
+        for ($i = 0; $i < 21; $i++) {
+            $rib .= mt_rand(0, 9);
+        }
+        return $rib;
+    }
+    public static function CodeGuichet(){
+        $codeGuichet = '';
+        for ($i = 0; $i < 4; $i++) {
+            $codeGuichet .= mt_rand(0, 9); 
+        }
+        return $codeGuichet;
+    }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-public function cartes(): HasMany
-{
-    return $this->hasMany(Carte::class);
-}
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+
 }

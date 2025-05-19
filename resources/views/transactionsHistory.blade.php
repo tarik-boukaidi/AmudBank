@@ -36,6 +36,7 @@
 .btn-primary {
     background-color: var(--secondary-color);
     color: white;
+    text-decoration: none;
 }
 
 .btn-primary:hover {
@@ -69,7 +70,23 @@
 .transaction-amount.debit {
     color: var(--accent-color);
 }
-
+.profile-content{
+    position:relative;
+}
+.btn-previous{
+    position:absolute;
+    left:30px;
+    
+}
+.btn-next{
+    position:absolute;
+    right:30px;
+}
+.pagination{
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 .transaction-status {
     display: inline-block;
     padding: 3px 8px;
@@ -98,33 +115,28 @@
 @section('content')
 <div id="transactions" class="tab-content">
     <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Transaction History</h2>
+    <form class="filters" action="{{route('transactionsHistory')}}" method="GET" style="margin-bottom: 20px; display: flex; gap: 15px;">
+        <select class="btn" name="type_compte" style="padding: 8px 15px;">
+            <option value="">All Accounts</option>
+            <option value="courant">compte courant</option>
+            <option value="epargne">compte epargne</option>
+            <option value="professionnel">compte professionnel</option>
+        </select>
+        <select class="btn" name="time" style="padding: 8px 15px;">
+            <option value="30">Last 30 Days</option>
+            <option value="60">Last 60 Days</option>
+            <option value="90">Last 90 Days</option>
+            <option value="">This Year</option>
+            <option value="">All Time</option>
+        </select>
 
-    <div class="filters" style="margin-bottom: 20px; display: flex; gap: 15px;">
-        <select class="btn" style="padding: 8px 15px;">
-            <option>All Accounts</option>
-            <option>Primary Account</option>
-            <option>Savings Account</option>
-            <option>Investment Account</option>
-        </select>
-        <select class="btn" style="padding: 8px 15px;">
-            <option>Last 30 Days</option>
-            <option>Last 60 Days</option>
-            <option>Last 90 Days</option>
-            <option>This Year</option>
-            <option>All Time</option>
-        </select>
-        <select class="btn" style="padding: 8px 15px;">
-            <option>All Transactions</option>
-            <option>Credits Only</option>
-            <option>Debits Only</option>
-        </select>
         <button class="btn btn-primary"><i class="fas fa-filter"></i> Apply</button>
-    </div>
+    </form>
 
     <table class="transaction-table">
         <thead>
             <tr>
-                <th>Date</th>
+                <th>Date et Heure</th>
                 <th>Description</th>
                 <th>Compte</th>
                 <th>Montant</th>
@@ -132,61 +144,36 @@
             </tr>
         </thead>
         <tbody>
+            @if($transactions->isEmpty())
             <tr>
-                <td>Jun 15, 2023</td>
-                <td>Grocery Store</td>
-                <td>Primary</td>
-                <td class="transaction-amount debit">-$125.50</td>
-                <td><span class="transaction-status status-completed">Completed</span></td>
+                <td colspan="5" style="text-align: center;">Aucune transaction pour le moment.</td>
             </tr>
+            @endif
+            @foreach($transactions as $transaction)
             <tr>
-                <td>Jun 14, 2023</td>
-                <td>Salary Deposit</td>
-                <td>Primary</td>
-                <td class="transaction-amount credit">+$3,500.00</td>
-                <td><span class="transaction-status status-completed">Completed</span></td>
+                <td>{{$transaction->created_at}}</td>
+                <td>{{$transaction->description}}</td>
+                <td>{{$transaction->compte_source}}</td>
+                <td class="transaction-amount debit">-{{$transaction->montant}}</td>
+                <td><span class="transaction-status status-completed">{{$transaction->status}}</span></td>
             </tr>
-            <tr>
-                <td>Jun 12, 2023</td>
-                <td>Online Shopping</td>
-                <td>Primary</td>
-                <td class="transaction-amount debit">-$89.99</td>
-                <td><span class="transaction-status status-completed">Completed</span></td>
-            </tr>
-            <tr>
-                <td>Jun 10, 2023</td>
-                <td>Utility Bill Payment</td>
-                <td>Primary</td>
-                <td class="transaction-amount debit">-$220.75</td>
-                <td><span class="transaction-status status-pending">Pending</span></td>
-            </tr>
-            <tr>
-                <td>Jun 8, 2023</td>
-                <td>Transfer to Friend</td>
-                <td>Primary</td>
-                <td class="transaction-amount debit">-$200.00</td>
-                <td><span class="transaction-status status-completed">Completed</span></td>
-            </tr>
-            <tr>
-                <td>Jun 5, 2023</td>
-                <td>Dividend Payment</td>
-                <td>Investment</td>
-                <td class="transaction-amount credit">+$150.25</td>
-                <td><span class="transaction-status status-completed">Completed</span></td>
-            </tr>
-            <tr>
-                <td>Jun 3, 2023</td>
-                <td>Monthly Savings</td>
-                <td>Savings</td>
-                <td class="transaction-amount credit">+$500.00</td>
-                <td><span class="transaction-status status-completed">Completed</span></td>
-            </tr>
+            @endforeach
         </tbody>
     </table>
 
-    <div style="margin-top: 20px; text-align: center;">
-        <button class="btn" style="margin-right: 10px;"><i class="fas fa-chevron-left"></i> Previous</button>
-        <button class="btn btn-primary">Next <i class="fas fa-chevron-right"></i></button>
+    <div class="pagination">
+        @if($transactions->onFirstPage() === false)
+            <a href="{{ $transactions->previousPageUrl() }}" class="btn btn-primary btn-previous" style="margin-right: 10px;">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+        @endif
+
+        @if($transactions->hasMorePages())
+            <a href="{{ $transactions->nextPageUrl() }}" class="btn btn-primary btn-next">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+        @endif
     </div>
+
 </div>
 @endsection

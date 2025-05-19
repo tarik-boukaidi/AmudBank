@@ -19,6 +19,8 @@ return new class extends Migration
             $table->enum('statut', ['actif', 'suspendu', 'fermé','expirée'])->default('actif');
             $table->string('numero_compte')->unique(); 
             $table->string('numero_carte')->unique();
+            $table->string('rip')->unique();
+            $table->string('Code_guichet');
             $table->enum('type_carte', ['Visa', 'MasterCard', 'Autre']);
             $table->string('date_expiration');
             $table->string('code_securite'); 

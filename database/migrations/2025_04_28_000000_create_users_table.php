@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('telephone')->unique();
             $table->string('password');
-            $table->string('rip');
             $table->string('cin_image'); 
             $table->date('birthday')->notNullable();
             $table->string('adresse')->notNullable();

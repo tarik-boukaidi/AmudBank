@@ -15,18 +15,19 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();  // transaction_id
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');  // user_id
-            $table->string('numero_carte');
+            $table->foreignId('compte_id')->constrained('comptes')->onDelete('cascade');  
+            $table->string('numero_compte');
             $table->string('compte_source');
             $table->decimal('montant', 10, 2);  // amount
             $table->enum('status',  ['en_attente', 'terminée', 'échouée'])->default('terminée'); 
             $table->enum('transaction_type', [
                 'dépôt', 'retrait', 'paiement', 'virement',
-                'remboursement', 'litige', 'frais', 'abonnement']);
+                'remboursement', 'litige', 'frais', 'abonnement'])->default('virement');
             $table->text('description')->nullable();
             $table->string('nom_complete');
-            $table->string('numero_carte_destination');
-            $table->timestamps();   
+            $table->string('numero_compte_destination');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

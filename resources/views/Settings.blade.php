@@ -251,10 +251,6 @@ input:checked + .slider:before {
                         </div>
 
                         <div class="info-item">
-                            <p class="info-label">Rip</p>
-                            <p class="info-value">{{ auth()->user()->rip }}</p>
-                        </div>
-                        <div class="info-item">
                             <p class="info-label">Email</p>
                             <p class="info-value">{{ auth()->user()->email }}</p>
                         </div>

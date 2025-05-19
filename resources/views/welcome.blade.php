@@ -1,333 +1,401 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Your Application</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
+@extends('client')
+@section('styles')
+<style>
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --success-color: #2ecc71;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.profile-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.profile-content {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+}
+
+.section-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+.section-title i {
+    margin-right: 10px;
+}
+
+.account-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.account-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.account-card::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.account-type {
+    font-size: 16px;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+.bank-name{
+    font-size: 30px;
+    margin-bottom: 15px;
+    right:10px;
+    top:0px;
+    position:absolute;
+    opacity: 0.9; 
+}
+
+.account-balance {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.account-number {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+.account-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+}
+
+.btn-outline:hover {
+    background-color: white;
+    color: var(--secondary-color);
+}
+
+.recent-transactions {
+    margin-bottom: 30px;
+}
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transaction-table th, .transaction-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.transaction-table th {
+    background-color: var(--light-color);
+    font-weight: 600;
+}
+
+.transaction-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.transaction-amount.credit {
+    color: var(--success-color);
+}
+
+.transaction-amount.debit {
+    color: var(--accent-color);
+}
+
+.transaction-status {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-completed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap');
+               
+        .credit-card {
+            width: 380px;
+            height: 240px;
+            background: linear-gradient(145deg, #1a3a6e 0%, #2a5a9a 50%, #3a7ac6 100%);
+            border-radius: 16px;
+            color: white;
+            padding: 25px;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #2b3a67 0%, #1e2a4a 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #212529;
-            line-height: 1.6;
-        }
-        
-        .login-container {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 420px;
-            padding: 40px;
-            animation: fadeIn 0.5s ease-in-out;
+            background-image: url('{{ asset('bleu.jpg') }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        .epargne{
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            background-image: url('{{ asset('23.png ') }}');
+
+
+        }
+        .professionnel{
+            background: linear-gradient(to right, #000000, #0d0d0d, #1a1a1a);
+            background-image: url('{{ asset('black.jpg') }}');
+            /* background: linear-gradient(to right, #f5e6c8, #e8d8b5, #d4c4a3);   */             
+            } 
+        
+        .credit-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
         }
         
-        .login-container::before {
-            content: '';
+        .bank-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .card-number {
+            letter-spacing: 1px;
+            font-size: 20px;
+            letter-spacing: 3px;
+            top:55%;
+            right:13%;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            z-index: 2;
+        }
+        
+        .card-holder {
+            font-size: 16px;
+            letter-spacing: 2px;
+            bottom:25px;
+            position: absolute;
+            
+            z-index: 2;
+        }
+        
+        .card-bottom {
+            position:absolute;
+            justify-content: space-between;
+            align-items: flex-end;
+            position:absolute;
+            bottom:25px;
+            right:25px;
+            line-height:15px;
+            margin-top: 15px;
+        }
+        
+        
+        /* .chip {
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            border-radius: 5px;
+            position: absolute;
+            top: 50px;
+            left: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        } */
+        
+        .contactless {
+            position: absolute;
+            top: 30px;
+            right: 25px;
+
+        }
+        
+        .mastercard-logo {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+
+
+        }
+        
+        .expiry {
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        
+        .expiry-label {
+            font-size: 8px;
+            opacity: 0.8;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .bank-logo img{
+            position:absolute;
+            top:40px;
+            height: 50px;
+            width:auto;       
+            font-weight: bold;
+            vertical-align: middle;
+            }
+        .gloss {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 8px;
-            background: linear-gradient(90deg, #4361ee 0%, #f72585 100%);
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%);
+            pointer-events: none;
+            border-radius: 16px;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .login-header h2 {
-            color: #4361ee;
-            margin-bottom: 10px;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        
-        .login-header p {
-            color: #6c757d;
-            font-size: 15px;
-        }
-        
-        .inputs {
-            margin-bottom: 20px;
-        }
-        
-        .inputs label {
-            display: block;
-            margin-bottom: 8px;
-            color: #212529;
-            font-weight: 500;
-            font-size: 14px;
-        }
-        
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
-        .input-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-            font-size: 16px;
-        }
-        
-        .inputs input {
-            width: 100%;
-            padding: 14px 15px 14px 45px;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background-color: #f8f9fa;
-        }
-        
-        .inputs input:focus {
-            border-color: #4361ee;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
-            outline: none;
-            background-color: white;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background-color: #4361ee;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .btn:hover {
-            background-color: #3a56d4;
-            transform: translateY(-2px);
-        }
-        
-        .btn i {
-            font-size: 14px;
-        }
-        
-        .error-message {
-            background-color: #fff5f5;
-            border-left: 4px solid #f72585;
-            padding: 16px;
-            margin-bottom: 25px;
-            border-radius: 6px;
-            animation: shake 0.5s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-        }
-        
-        .error-message ul {
-            list-style-type: none;
-        }
-        
-        .error-message li {
-            color: #f72585;
-            font-size: 14px;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .error-message li:last-child {
-            margin-bottom: 0;
-        }
-        
-        .error-message li i {
-            font-size: 12px;
-        }
+</style>
+@endsection
+@section('content')               
 
-        .options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-            font-size: 14px;
-        }
+                <div id="overview" class="tab-content active">
+                    <h2 class="section-title"><i class="fas fa-chart-pie"></i> Account Overview</h2>
 
-        .remember-me {
-            display: flex;
-            align-items: center;
-        }
+                    <div class="account-summary">
 
-        .remember-me input {
-            margin-right: 8px;
-            accent-color: #4361ee;
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .remember-me label {
-            color: #212529;
-            cursor: pointer;
-        }
-
-        .forgot-password a {
-            color: #4361ee;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .forgot-password a:hover {
-            color: #3a56d4;
-            text-decoration: underline;
-        }
-
-        .password-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #6c757d;
-            transition: all 0.3s ease;
-            background: none;
-            border: none;
-            font-size: 16px;
-        }
-
-        .toggle-password:hover {
-            color: #4361ee;
-        }
-        
-        .footer-text {
-            text-align: center;
-            margin-top: 25px;
-            color: #6c757d;
-            font-size: 14px;
-        }
-        
-        .footer-text a {
-            color: #4361ee;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .footer-text a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="login-container">
-        <div class="login-header">
-            <h2>Welcome Back</h2>
-            <p>Please enter your credentials to login</p>
-        </div>
-        
-        <form method="POST" action="{{route('login')}}">
-            @csrf
-            @if($errors->any())
-            <div class="error-message">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li><i class="fas fa-exclamation-circle"></i> {{ $error }}</li>
+                    @foreach($comptes as $compte)
+                            <div class="credit-card {{ $compte->type_compte }}">
+                                        <div class="gloss"></div>
+                                        <div class="bank-name">AmudBank</div>
+                                        <div class="bank-logo">
+                                        <img src="{{ asset('logo.png') }}" alt="Image">
+                                        </div>
+                                        <div class="contactless">Compte {{$compte->type_compte}}</div>
+                                        <div class="card-number">{{$compte->numero_carte}}</div>
+                                        <div class="card-bottom">
+                                                <span class="expiry-label">VALID THRU</span>
+                                                <span class="expiry">{{$compte->date_expiration}}</span>
+                                        </div>
+                                        <div class="card-holder">{{ strtoupper(auth()->user()->Prenom) }} {{ strtoupper(auth()->user()->Nom) }}
+                                        </div>
+                                        <!-- <div class="mastercard-logo">Mastercard</div> -->
+                                        <div class="mastercard-logo"></div>
+                                    </div>
                     @endforeach
-                </ul>
-            </div>
-            @endif
-            
-            <div class="inputs">
-                <label for="Cin">CIN</label>
-                <div class="input-group">
-                    <i class="fas fa-id-card input-icon"></i>
-                    <input type="text" id="Cin" placeholder="Enter your CIN" name="Cin" value="{{ old('Cin') }}" required>
-                </div>
-            </div>
 
-            <div class="inputs">
-                <label for="Password">Password</label>
-                <div class="input-group">
-                    <i class="fas fa-lock input-icon"></i>
-                    <div class="password-container">
-                        <input type="password" id="Password" placeholder="Enter your password" name="Password" required>
-                        <button type="button" class="toggle-password" id="togglePassword">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                    </div>
+
+
+                    <div class="recent-transactions">
+                        <h3 class="section-title"><i class="fas fa-history"></i> Recent Transactions</h3>
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Date et Heure</th>
+                                    <th>Description</th>
+                                    <th>Compte</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                                        @if($transactions->isEmpty())
+            <tr>
+                <td colspan="5" style="text-align: center;">Aucune transaction pour le moment.</td>
+            </tr>
+            @endif
+                            @foreach($transactions as $transaction)
+                            <tr>
+                                <td>{{$transaction->created_at}}</td>
+                                <td>{{$transaction->description}}</td>
+                                <td>{{$transaction->compte_source}}</td>
+                                <td class="transaction-amount debit">-{{$transaction->montant}}</td>
+                                <td><span class="transaction-status status-completed">{{$transaction->status}}</span></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-
-            <div class="options">
-                <div class="remember-me">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Remember me</label>
-                </div>
-                <div class="forgot-password">
-                    <a href="#">Forgot password?</a>
-                </div>
-            </div>
-
-            <button type="submit" class="btn">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
-        </form>
-        
-        <div class="footer-text">
-            Don't have an account? <a href="#">Sign up</a>
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const passwordInput = document.getElementById('Password');
-            const icon = this.querySelector('i');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-    </script>
-</body>
-</html>
+@endsection

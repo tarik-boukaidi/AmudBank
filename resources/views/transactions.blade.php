@@ -42,8 +42,61 @@
     background-color: #2980b9;
 }
 
-.transfer-form {
+.transfer-type-selector {
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
 
+.transfer-type-btn {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+}
+
+.transfer-type-btn.active {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.transfer-form {
+    margin-top: 20px;
+}
+
+.transfer-section {
+    display: none;
+}
+
+.transfer-section.active {
+    display: block;
+}
+
+.alert-success {
+    background-color: #d4edda;  
+    color: #155724;             
+    border: 1px solid #c3e6cb;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+    font-size: 16px;
+    position: relative;
+}
+
+.alert-danger {
+    background-color: #f8d7da;  
+    color: #721c24;             
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+    font-size: 16px;
+    position: relative;
 }
 
 .transfer-form h3 {
@@ -73,68 +126,163 @@
     margin-top: 20px;
     width: 100%;
 }
+
+.internal-transfer .account-select {
+    margin-bottom: 15px;
+}
+
+.external-transfer .bank-info {
+    margin-bottom: 15px;
+}
 </style>
 @endsection
 
 @section('content')
-<form class="transfer-form" method="POST" action="{{ route('faireTransactions') }}">
-@csrf
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
+<div class="transfer-container">
+    <h3 class="section-title"><i class="fas fa-paper-plane"></i> Effectuer un Virement</h3>
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul style="list-style-type: none;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="transfer-type-selector">
+        <button type="button" class="transfer-type-btn active" data-type="internal">Virement Interne</button>
+        <button type="button" class="transfer-type-btn" data-type="external">Virement Externe</button>
     </div>
-@endif
 
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-    <h3><i class="fas fa-paper-plane"></i> Virement Bancaire</h3>
-    <p>Veuillez fournir les détails ou les notes spécifiques liés au virement.</p>
+    <!-- Virement Interne -->
+    <form id="internal-transfer-form" class="transfer-form internal-transfer transfer-section active" method="POST" action="{{ route('internal_transfer') }}">
+        @csrf
+        <div class="account-select">
+            <label for="source-account">Compte Source</label>
+            <select id="source-account" name="source" required>
+                <option value="">-- Sélectionner le compte source --</option>
+                @foreach(auth()->user()->comptes as $compte)
+                    <option value="{{ $compte->type_compte }}">Compte {{ $compte->type_compte }} ({{ $compte->numero_carte }}) - Solde: {{ $compte->solde }} MAD</option>
+                @endforeach
+            </select>
+        </div>
 
-    <h4>Détails du Virement</h4>
-    <p>Entrez votre informations de virement. </p>
+        <div class="account-select">
+            <label for="target-account">Compte Destination</label>
+            <select id="target-account" name="compte_destinataire" required>
+                <option value="">-- Sélectionner le compte destination --</option>
+                @foreach(auth()->user()->comptes as $compte)
+                    <option value="{{ $compte->type_compte }}">Compte {{ $compte->type_compte }} ({{ $compte->numero_carte }})</option>
+                @endforeach
+            </select>
+        </div>
 
-    <label for="source">Sélectionner la Banque Source</label>
-    <select id="source" name="source" required>
-        <option value="">-- Sélectionner la banque --</option>
-        <option value="courant">Compte Courant</option>
-        <option value="epargne">Compte Épargne</option>
-        <option value="professionnel">Compte Professionnel</option>
-    </select>
-    <small>Sélectionnez le compte bancaire à partir duquel vous souhaitez transférer des fonds.</small>
+        <label for="internal-amount">Montant (MAD)</label>
+        <input type="number" name="montant" id="internal-amount" step="0.01" min="0.01" placeholder="ex : 500.00" required>
+
+        <label for="internal-description">Description (Facultatif)</label>
+        <textarea id="internal-description" name="description" rows="2" placeholder="Description du virement"></textarea>
+
+        <button type="submit" class="btn btn-primary">Effectuer le virement interne</button>
+    </form>
+
+    <!-- Virement Externe -->
+    <form id="external-transfer-form" class="transfer-form external-transfer transfer-section" method="POST" action="{{ route('faireTransactions') }}">
+        @csrf
+        <div class="account-select">
+            <label for="external-source-account">Compte Source</label>
+            <select id="external-source-account" name="source" required>
+                <option value="">-- Sélectionner le compte source --</option>
+                @foreach(auth()->user()->comptes as $compte)
+                    <option value="{{ $compte->type_compte }}">Compte {{ $compte->type_compte }} ({{ $compte->numero_carte }}) - Solde: {{ $compte->solde }} MAD</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="bank-info">
+            <label for="bank-name">Nom de la banque du bénéficiaire</label>
+            <select id="bank-name" name="banque_destinataire" required>
+                <option value="">-- Sélectionnez une banque --</option>
+                <option value="AmudBank">Amud Bank</option>
+                <option value="Al Barid Bank">Al Barid Bank</option>
+                <option value="Attijariwafa Bank">Attijariwafa Bank</option>
+                <option value="Banque Populaire">Banque Populaire</option>
+                <option value="BMCE Bank">BMCE Bank (Bank of Africa)</option>
+                <option value="CIH Bank">CIH Bank</option>
+                <option value="Crédit Agricole du Maroc">Crédit Agricole du Maroc</option>
+                <option value="Crédit du Maroc">Crédit du Maroc</option>
+                <option value="Société Générale Maroc">Société Générale Maroc</option>
+                <option value="Banque Centrale Populaire">Banque Centrale Populaire</option>
+                <option value="Bank Al-Maghrib">Bank Al-Maghrib</option>
+                <option value="Autre">Autre</option>
+            </select>
+        </div>
 
 
-    <label for="note">description de Virement (Facultatif)</label>
-    <textarea id="note" name="description" rows="3" placeholder="Fournissez toute information ou instruction supplémentaire liée au virement."></textarea>
+        <div class="bank-info">
+            <label for="beneficiary-name">Nom complet du bénéficiaire</label>
+            <input type="text" id="beneficiary-name" name="nom_complete" placeholder="Nom complet du bénéficiaire" required>
+        </div>
 
-    <label for="email">Nom complet de Destinataire</label>
-    <input type="text" name="nom_complete" id="email" placeholder="Saisir le nom complet de destinataire" required>
+        <div class="bank-info">
+            <label for="account-number">Numéro de compte du bénéficiaire</label>
+            <input type="text" id="account-number" name="num_compte_destinataire" placeholder="Numéro de compte" required>
+        </div>
 
-    <label for="receiver-id">Numero de carte bancaire de Destinataire</label>
-    <input type="text" name="num_compte_destinataire" id="receiver-id" placeholder="Saisir le numéro de compte public" required>
 
-    <label for="amount">Montant</label>
-    <input type="number" name="montant" id="amount" step="0.01" placeholder="ex : 5.00" required>
+        <label for="external-amount">Montant (MAD)</label>
+        <input type="number" name="montant" id="external-amount" step="0.01" min="0.01" placeholder="ex : 500.00" required>
 
-     <button type="submit"  class="btn btn-primary" >Effectuer le Virement</button> 
-</form>
+        <label for="external-description">Description (Facultatif)</label>
+        <textarea id="external-description" name="description" rows="2" placeholder="Description du virement"></textarea>
 
+        <button type="submit" class="btn btn-primary">Effectuer le virement externe</button>
+    </form>
+</div>
 
 <script>
-// function submitTransfer() {
-//     const source = document.getElementById('source').value;
-//     const email = document.getElementById('email').value;
-//     const receiverId = document.getElementById('receiver-id').value;
-//     const amount = document.getElementById('amount').value;
+document.addEventListener('DOMContentLoaded', function() {
+    const transferTypeBtns = document.querySelectorAll('.transfer-type-btn');
+    const transferSections = document.querySelectorAll('.transfer-section');
 
-//     if (!source || !email || !receiverId || !amount) {
-//         alert("Please fill all required fields.");
-//         return;
-//     }
+    transferTypeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const type = this.dataset.type;
+            
+            // Update active button
+            transferTypeBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding form
+            transferSections.forEach(section => section.classList.remove('active'));
+            document.getElementById(`${type}-transfer-form`).classList.add('active');
+        });
+    });
 
-//     alert("Transfer of $" + amount + " to " + email + " is being processed.");
-// }
-// </script>
+    // Prevent selecting same account for source and target in internal transfer
+    const sourceAccount = document.getElementById('source-account');
+    const targetAccount = document.getElementById('target-account');
+
+    if(sourceAccount && targetAccount) {
+        sourceAccount.addEventListener('change', function() {
+            Array.from(targetAccount.options).forEach(option => {
+                option.disabled = option.value === this.value && option.value !== '';
+            });
+        });
+
+        targetAccount.addEventListener('change', function() {
+            Array.from(sourceAccount.options).forEach(option => {
+                option.disabled = option.value === this.value && option.value !== '';
+            });
+        });
+    }
+});
+</script>
 @endsection

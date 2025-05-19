@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Carte;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ProfileMail;
+use App\Mail\CodePin;
 use Illuminate\Support\Facades\Session;
 use App\Models\Compte;
 
@@ -18,6 +18,10 @@ class AdminController extends Controller
     public function showinglogin()
     {
         return view('login');
+    }
+    public function showregister()
+    {
+        return view('register');
     }
 
     public function showRegistration(Request $request)
@@ -95,11 +99,13 @@ class AdminController extends Controller
         if (!$nomFound || !$prenomFound || !$cinFound) {
             unlink($path);
 
-            return response()->json([
-                'success' => false,
-                'text' => $text,
-                'errors' => ['cin_image' => 'Vos informations saisies ne correspondent pas aux informations de votre carte']
-            ], 422);
+            // return response()->json([
+            //     'success' => false,
+            //     // 'text' => $text,
+            //     'errors' => ['cin_image' => 'Vos informations saisies ne correspondent pas aux informations de votre carte']
+            // ], 422);
+        return redirect()->back()->withErrors(['cin_image' => 'Vos informations saisies ne correspondent pas aux informations de votre carte.']);
+
         }
 
         $user = User::create([
@@ -110,7 +116,6 @@ class AdminController extends Controller
             "email" =>$request->email,
             "telephone" => $request->telephone,
             "password" => Hash::make($request->password),
-            'rip' => User::generateRib(),
             'cin_image' => $imageName,
             'adresse' =>$request->adresse,
             'birthday' =>$request->birthday,
@@ -140,6 +145,8 @@ class AdminController extends Controller
             'numero_compte' => rand(1000000, 9999999),
             'numero_carte' => implode(' ', str_split(rand(1000000000000000, 9999999999999999), 4)),
             'type_carte' => $typeCarte,
+            'rip' => Compte::generateRib(),
+            'Code_guichet'=> Compte::CodeGuichet(),
             'date_expiration' => now()->addYears(5)->format('m/y'),
             'etat' => 'active',
             'plafond_journalier' => $plafond,
@@ -161,36 +168,18 @@ class AdminController extends Controller
         'numero_compte' => rand(1000000, 9999999),
         'numero_carte' => implode(' ', str_split(rand(1000000000000000, 9999999999999999), 4)),
         'type_carte' => 'mastercard',
+        'rip' => Compte::generateRib(),
+        'Code_guichet'=> Compte::CodeGuichet(),
         'date_expiration' => now()->addYears(5)->format('m/y'),
         'etat' => 'active',
         'plafond_journalier' => 5000.00,
         'code_securite' => bcrypt(rand(1000, 9999)),
     ]);
 }
-// protected function createCard(Compte $compte)
-// {
-//     $typeCarte = in_array($compte->type_compte, ['courant', 'epargne']) ? 'mastercard' : 'visa';
 
-//     if ($compte->type_compte == 'courant') {
-//         $plafond = 5000.00;
-//     } elseif ($compte->type_compte == 'epargne') {
-//         $plafond = 1000.00;
-//     } else {
-//         $plafond = 10000.00;
-//     }
     
 
-//     return Carte::create([
-//         'compte_id' => $compte->id,
-//         'numero_compte' => rand(1000000, 9999999),
-//         'numero_carte' => implode(' ', str_split(rand(1000000000000000, 9999999999999999), 4)),
-//         'type_carte' => $typeCarte,
-//         'date_expiration' => now()->addYears(5)->format('m/y'),
-//         'etat' => 'active',
-//         'plafond_journalier' => $plafond,
-//         'code_securite' => bcrypt(rand(1000, 9999)),
-//     ]);
-// }
+
 
 
 
@@ -216,15 +205,17 @@ class AdminController extends Controller
         $user = User::where('email', $email)->first();
     
 
-        // Mark as verified
+        
         $user->update([
             'email_verified_at' => now(),
         ]);
         $compte=$this->createBankAccount($user);
-        // $this->createCard($compte);
+        $code = rand(1000, 9999);
+        $carte = $compte->numero_carte;
+        Mail::to($user->email)->send(new CodePin($user, $code, $carte));
 
         Auth::login($user);
-    
+
         return redirect()->route('client')// ->with('success', 'Vérification réussie !') ;
     ;}
         
@@ -264,7 +255,7 @@ class AdminController extends Controller
         }
 
         return back()->withErrors([
-            'Cin' => 'Invalid CIN or password'
+            'Cin' => 'CIN ou mot de passe invalide.'
         ])->onlyInput('Cin');
     }
 
@@ -293,18 +284,7 @@ class AdminController extends Controller
         return redirect()->route('settings')->with('success', 'Profile updated successfully.');
         
     }
-    public function cartesBancaires(Request $request)
-    {
-        $user = Auth::user();
-        
 
-    }
-    public function compte($user)
-    {
-        
-
-
-    }
 
 
     public function logout(Request $request)

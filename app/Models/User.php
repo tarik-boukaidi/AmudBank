@@ -20,22 +20,18 @@ class User extends Authenticatable // Extend the Authenticatable class
         'email',
         'telephone',
         'password',
-        'rip',
         'cin_image',
         'email_verified_at',
         'birthday',
         'adresse',
     ];
-    public static function generateRib()
-    {
-        $rib = '288';
-        for ($i = 0; $i < 21; $i++) {
-            $rib .= mt_rand(0, 9);
-        }
-        return $rib;
-    }
+    
     public function comptes()
 {
     return $this->hasMany(Compte::class);
+}
+public function transactions()
+{
+    return $this->hasManyThrough(Transaction::class, Compte::class);
 }
 }
