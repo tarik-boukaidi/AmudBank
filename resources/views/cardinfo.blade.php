@@ -106,11 +106,17 @@ body {
     letter-spacing: 2px;
     font-family: 'Courier New', monospace;
 }
+/* Back styles for different account types */
+.credit-card.epargne .card-back {
+    background: rgb(161, 95, 33); /* Same as your epargne front */
+}
 
+.credit-card.professionnel .card-back {
+    background: linear-gradient(to right, #000000, #1a1a1a); /* Same as your professionnel front */
+}
 /* Type-specific backgrounds */
 .credit-card.epargne .card-front {
-    background: linear-gradient(to right, #2ecc71, #27ae60);
-    background-image: url('{{ asset('23.png') }}');
+    background-image: url('{{ asset('maron.jpg') }}');
 }
 
 .credit-card.professionnel .card-front {
@@ -123,6 +129,7 @@ body {
     font-weight: 700;
     margin-bottom: 30px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-left:10px;
 }
 
 .card-number {
@@ -169,10 +176,11 @@ body {
     font-size: 14px;
 }
 
-.bank-logo img {
+.bank-logo i{
     position: absolute;
-    top: 40px;
-    height: 50px;
+    top: 35px;
+    left:15px;
+    height: 30px;
     width: auto;
 }
 
@@ -256,6 +264,7 @@ body {
 .transaction-amount {
     font-weight: 600;
     font-size: 1rem;
+    /* color: #e74c3c; */
 }
 
 .transaction-amount.credit {
@@ -265,6 +274,33 @@ body {
 .transaction-amount.debit {
     color: #e74c3c;
 }
+.black-strip {
+    height: 40px;
+    background: #000;
+    margin: 15px -15px 10px -15px;
+}
+
+.cvv-section {
+    align-self: flex-end;
+    background: white;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.cvv-label {
+    font-size: 10px;
+    margin-bottom: 3px;
+}
+
+.cvv-number {
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
 </style>
 @endsection
 
@@ -285,7 +321,7 @@ body {
                         <div class="gloss"></div>
                         <div class="bank-name">AmudBank</div>
                         <div class="bank-logo">
-                            <img src="{{ asset('logo.png') }}" alt="Logo Banque">
+                             <i class="fas fa-university"></i>
                         </div>
                         <div class="contactless">Compte {{$compte->type_compte}}</div>
                         <div class="card-number">{{ $compte->numero_carte }}</div>
@@ -297,8 +333,12 @@ body {
                     </div>
 
                     <!-- Face arrière -->
-                    <div class="card-back">
-                        **** **** **** {{ substr($compte->numero_carte, -4) }}
+                    <div class="card-back {{ $compte->type_compte }}">
+                        <div class="black-strip"></div>
+                        <div class="cvv-section">
+                            <div class="cvv-label">CVV/CVC</div>
+                            <div class="cvv-number">{{ $compte->CVV_CVC }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -320,23 +360,38 @@ body {
 
     <!-- Transactions -->
     <div class="transactions">
-        <h3><i class="fas fa-clock"></i> Transactions récentes</h3>
-        @if($compte->transactions->isEmpty())
+    <h3><i class="fas fa-clock"></i> Transactions récentes</h3>
+
+    @if($compte->transactions->isEmpty())
         <div class="alert alert-info" style="text-align: center;">
             Aucune transaction pour le moment.
         </div>
+    @endif
+
+    @foreach ($compte->transactions as $transaction) 
+        @if($transaction->compte_source == $compte->type_compte)
+            <div class="transaction-item">
+                <div class="left">
+                    <div class="transaction-title">{{ $transaction->description }}</div>
+                    <div class="transaction-date">{{ $transaction->created_at }}</div>
+                </div>
+                <div class="transaction-amount debit">
+                    -{{ $transaction->montant }} MAD
+                </div>
+            </div>
+        @elseif($transaction->numero_compte_destination == $compte->numero_compte)
+            <div class="transaction-item">
+                <div class="left">
+                    <div class="transaction-title">{{ $transaction->description }}</div>
+                    <div class="transaction-date">{{ $transaction->created_at }}</div>
+                </div>
+                <div class="transaction-amount credit">
+                    +{{ $transaction->montant }} MAD
+                </div>
+            </div>
         @endif
-        @foreach ($compte->transactions as $transaction) 
-        <div class="transaction-item">
-            <div class="left">
-                <div class="transaction-title">{{ $transaction->description }}</div>
-                <div class="transaction-date">{{ $transaction->created_at }}</div>
-            </div>
-            <div class="transaction-amount {{ $transaction->amount < 0 ? 'debit' : 'credit' }}">
-                {{ $transaction->montant }} MAD
-            </div>
-        </div>
-        @endforeach
-    </div>
+    @endforeach
+</div>
+
 </div>
 @endsection

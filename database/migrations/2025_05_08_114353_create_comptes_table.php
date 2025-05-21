@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('numero_compte')->unique(); 
             $table->string('numero_carte')->unique();
             $table->string('rip')->unique();
-            $table->string('Code_guichet');
+            $table->string('CVV_CVC');
             $table->enum('type_carte', ['Visa', 'MasterCard', 'Autre']);
             $table->string('date_expiration');
             $table->string('code_securite'); 

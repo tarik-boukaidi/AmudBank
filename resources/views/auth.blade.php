@@ -37,7 +37,6 @@ body {
     min-height: 100vh;
 }
 
-/* Main Container Layout */
 .bank-app-container {
     display: grid;
     grid-template-columns: 1fr;

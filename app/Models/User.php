@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable; // Add this line
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Compte;
+use App\Models\Delete_request;
+use App\Models\Transaction;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable // Extend the Authenticatable class
 {
-    use Notifiable; // Include the Notifiable trait for notifications
+    use Notifiable;
+    use SoftDeletes;
 
     protected $table = 'users';
     protected $primaryKey = 'id';
@@ -24,6 +29,7 @@ class User extends Authenticatable // Extend the Authenticatable class
         'email_verified_at',
         'birthday',
         'adresse',
+        'status', 
     ];
     
     public function comptes()
@@ -33,5 +39,9 @@ class User extends Authenticatable // Extend the Authenticatable class
 public function transactions()
 {
     return $this->hasManyThrough(Transaction::class, Compte::class);
+}
+public function deleteRequest()
+{
+    return $this->hasOne(Delete_request::class);
 }
 }

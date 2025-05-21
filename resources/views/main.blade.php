@@ -88,8 +88,8 @@ body {
     transition: var(--transition);
 }
 
-.nav-links a:hover {
-    color: var(--primary-color);
+.nav-links .a:hover {
+     color: var(--primary-color); 
 }
 
 .btn {
@@ -111,6 +111,7 @@ body {
 .btn-outline:hover {
     background-color: var(--primary-color);
     color: white;
+    /* transform: translateY(-2px); */
 }
 
 .btn-primary {
@@ -227,9 +228,11 @@ body {
 }
 
 .card {
-    width: 280px;
-    height: 160px;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    width: 300px;
+    height: 200px;
+    background-image: url('{{ asset('bleu.jpg') }}');
+    background-repeat: no-repeat;
+    background-position: center;
     border-radius: 12px;
     padding: 1.25rem;
     color: white;
@@ -241,11 +244,14 @@ body {
 .card-1 {
     transform: rotate(-5deg);
     z-index: 2;
+    background-size: cover;
+
+    
 }
 
 .card-2 {
     transform: rotate(5deg) translateY(-120px) translateX(40px);
-    background: linear-gradient(135deg, #10b981, #059669);
+    background-image: url('{{ asset('black.jpg') }}');
     z-index: 1;
 }
 
@@ -262,11 +268,14 @@ body {
 }
 
 .card-footer {
+    position: relative;
+    margin-top:20%;
     display: flex;
     justify-content: space-between;
     font-size: 0.8rem;
     text-transform: uppercase;
 }
+
 
 /* Sections communes */
 .section-title {
@@ -617,10 +626,10 @@ body {
                 <span>AmudBank</span>
             </div>
             <div class="nav-links">
-                <a href="#features">Fonctionnalités</a>
-                <a href="#security">Sécurité</a>
-                <a href="#pricing">Tarifs</a>
-                <a href="#contact">Contact</a>
+                <a href="#features" class="a">Fonctionnalités</a>
+                <a href="#security" class="a">Sécurité</a>
+                <a href="#pricing" class="a">Tarifs</a>
+                <a href="#contact" class="a">Contact</a>
                 <a href="{{ route('login') }}" class="btn btn-outline">Connexion</a>
                 <a href="{{ route('register_step1') }}" class="btn btn-primary">Ouvrir un compte</a>
             </div>
@@ -655,7 +664,7 @@ body {
                 </div>
             </div>
             <div class="hero-image">
-                <img src="https://cdn-icons-png.flaticon.com/512/2638/2638031.png" alt="Application mobile AmudBank">
+<img style="visibility: hidden;" src="https://cdn-icons-png.flaticon.com/512/2638/2638031.png" alt="Application mobile AmudBank">
                 <div class="card-animation">
                     <div class="card card-1">
                         <div class="card-chip">

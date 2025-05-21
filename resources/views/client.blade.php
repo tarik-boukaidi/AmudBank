@@ -168,9 +168,8 @@
             margin-bottom: 18%;
         }
 
-        .logo img {
+        .logo i {
             margin-right: 10px;
-            color: var(--secondary-color);
             height: 20px;
             width:auto;  
             font-weight: bold;
@@ -212,7 +211,7 @@
             <div class="profile-sidebar">
                 <ul class="profile-menu">
                     <div class="logo">
-                        <img src="{{ asset('logo.png') }}" alt="Image">
+                        <i class="fas fa-university"></i>
                         <span>AmudBank</span>
                     </div>
                     <li><a href="{{ route('client') }}" class="{{ request()->routeIs('client') ? 'active' : '' }}"><i class="fas fa-chart-pie"></i> Overview</a></li>

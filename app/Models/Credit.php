@@ -20,6 +20,7 @@ class Credit extends Model
     'Attestation_travail_contrat',
     'Bulletins_salaire',
     'paiement_mensuel',
+    'statut'
 ];
 
     protected $casts = [
@@ -33,16 +34,6 @@ class Credit extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function account()
-    {
-        return $this->belongsTo(BankAccount::class, 'account_id');
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(CreditPayment::class);
     }
 
     // Helper method to calculate remaining amount

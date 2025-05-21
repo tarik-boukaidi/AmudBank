@@ -16,10 +16,10 @@ class TransactionController extends Controller
             'source' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'nom_complete' => 'required|string|max:255',
-            'num_compte_destinataire' => 'required|digits:6',
+            'num_compte_destinataire' => 'required|digits:7',
 
        ]);
-        if($request->banque_destinataire == "Amud Bnak" && 
+        if($request->banque_destinataire == "AmudBank" && 
         $compte1 = Compte::where('numero_compte', $request->num_compte_destinataire)->first()){
 
         $compte = auth()->user()->comptes()->where('type_compte', $request->source)->first();
@@ -31,6 +31,8 @@ class TransactionController extends Controller
         }
         $compte->solde -= $request->montant;
         $compte->save();
+        $compte1->solde += $request->montant;
+        $compte1->save();
 
         Transaction::create([
             'compte_id' => $compte->id,
@@ -84,11 +86,9 @@ class TransactionController extends Controller
         $sourceAccount->solde -= $request->montant;
         $sourceAccount->save();
 
-        // Add to destination
         $destinationAccount->solde += $request->montant;
         $destinationAccount->save();
-
-        // Record the transaction
+        
         Transaction::create([
             'compte_id' => $sourceAccount->id,
             'numero_compte' => $sourceAccount->numero_compte,

@@ -21,7 +21,7 @@ class Compte extends Model
         'code_securite',
         'plafond_journalier',
         'rip',
-        'Code_guichet',
+        'CVV_CVC',
     ];
     public static function generateRib()
     {

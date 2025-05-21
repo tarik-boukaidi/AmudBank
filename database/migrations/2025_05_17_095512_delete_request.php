@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('delete_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('motif');
             $table->string('type_compte');
             $table->enum('reponse', ['en_attente', 'approuve', 'rejete'])->default('en_attente');

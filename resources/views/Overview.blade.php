@@ -87,8 +87,7 @@
 }
 
 .epargne {
-    background: linear-gradient(to right, #2ecc71, #27ae60);
-    background-image: url('{{ asset('23.png') }}');
+    background-image: url('{{ asset('maron.jpg') }}');
     position:absolute;
     z-index: 0;
     top: 0;
@@ -122,6 +121,7 @@
 .bank-name {
     font-size: 22px;
     font-weight: 700;
+    margin-left: 10px;
     margin-bottom: 30px;
     letter-spacing: 1px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -182,9 +182,10 @@
     margin-bottom: 2px;
 }
 
-.bank-logo img {
+.bank-logo i {
     position: absolute;
-    top: 40px;
+    top: 35px;
+    left:15px;
     height: 50px;
     width: auto;
     font-weight: bold;
@@ -229,7 +230,7 @@
             <div class="gloss"></div>
             <div class="bank-name">AmudBank</div>
             <div class="bank-logo">
-                <img src="{{ asset('logo.png') }}" alt="Logo">
+               <i class="fas fa-university"></i>
             </div>
             <div class="contactless">Compte {{$compte->type_compte}}</div>
             <div class="card-number">{{$compte->numero_carte}}</div>

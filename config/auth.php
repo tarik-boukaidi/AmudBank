@@ -39,7 +39,14 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-        ],
+        ], 'super_admin' => [
+        'driver' => 'session',
+        'provider' => 'super_admin',
+    ],
+    'mini_admins' => [
+        'driver' => 'session',
+        'provider' => 'mini_admins',
+    ],
     ],
 
     /*
@@ -63,7 +70,14 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
+        ], 'super_admin' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\SuperAdmin::class,
+    ],
+    'mini_admins' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\MiniAdmin::class,
+    ],
 
         // 'users' => [
         //     'driver' => 'database',

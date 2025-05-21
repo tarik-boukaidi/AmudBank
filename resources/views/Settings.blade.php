@@ -327,7 +327,7 @@ input:checked + .slider:before {
                 <button type="button" id="cancelEditBtn" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</button>
             </form>
         </div>
-                    <h3 class="section-title" style="margin-top: 30px;"><i class="fas fa-bell"></i> Notification Preferences</h3>
+                    <!-- <h3 class="section-title" style="margin-top: 30px;"><i class="fas fa-bell"></i> Notification Preferences</h3>
                     <div style="background-color: var(--light-color); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                             <div>
@@ -349,7 +349,7 @@ input:checked + .slider:before {
                                 <span class="slider round"></span>
                             </label>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {

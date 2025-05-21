@@ -160,6 +160,7 @@
 
     .input-with-icon i:first-child {
         position: absolute;
+        font-size: 1.25rem;
         left: 1rem;
         top: 50%;
         transform: translateY(-50%);
@@ -450,7 +451,7 @@
                             </div>
                         </div>
                         
-                        <p>Si vous n'avez pas reçu l'email, vérifiez votre dossier spam ou <a href="#">renvoyer le code</a>.</p>
+                        <p>Si vous n'avez pas reçu l'email, vérifiez votre dossier spam.</p>
                     </div>
                     
                     <button type="submit" class="auth-btn">

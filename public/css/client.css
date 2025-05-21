@@ -141,7 +141,7 @@ nav ul li a:hover {
     margin-right: 10px;
 }
 
-.btn {
+/* .btn {
     padding: 8px 15px;
     border: none;
     border-radius: 5px;
@@ -149,7 +149,7 @@ nav ul li a:hover {
     cursor: pointer;
     transition: all 0.3s;
     font-size: 14px;
-}
+} */
 
 .btn-sm {
     padding: 5px 10px;
@@ -165,11 +165,11 @@ nav ul li a:hover {
     background-color: #2980b9;
 }
 
-.btn-outline {
+/* .btn-outline {
     background-color: transparent;
     border: 1px solid white;
     color: white;
-}
+} */
 
 .btn-outline:hover {
     background-color: white;

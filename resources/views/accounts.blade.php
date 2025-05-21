@@ -87,9 +87,9 @@ body {
 }
 
 .btn-outline {
-    background-color: transparent;
-    border: 1px solid white;
-    color: white;
+    background-color: var(--secondary-color);
+    border: 1px solid black;
+    color: black;
 }
 
 .btn-outline:hover {
@@ -195,6 +195,7 @@ body {
 
 .delete-form .btn-outline:hover {
     background-color: #f5f5f5;
+    color:red;
 }
 
 .credit-card {
@@ -223,9 +224,9 @@ body {
 }
 
 .epargne {
-    background-image: linear-gradient(to right, #2ecc71, #27ae60), url('{{ asset('23.png') }}');
+    background-image: url('{{ asset('maron.jpg') }}');
     background-blend-mode: overlay;
-    background-size: cover;
+    /* background-size: cover; */
 }
 
 .professionnel {
@@ -241,6 +242,7 @@ body {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     position: relative;
     z-index: 2;
+    margin-left:10px;
 }
 
 .card-number {
@@ -299,10 +301,11 @@ body {
     margin-bottom: 2px;
 }
 
-.bank-logo img {
+.bank-logo i {
     position: absolute;
-    top: 40px;
-    height: 50px;
+    top: 35px;
+    left: 15px;
+    height: 30px;
     width: auto;
     font-weight: bold;
     vertical-align: middle;
@@ -380,7 +383,7 @@ body {
                     <div class="gloss"></div>
                     <div class="bank-name">AmudBank</div>
                     <div class="bank-logo">
-                        <img src="{{ asset('logo.png') }}" alt="Image">
+                        <i class="fas fa-university"></i>
                     </div>
                     <div class="contactless">Compte {{$compte->type_compte}}</div>
                     <div class="card-number">{{$compte->numero_carte}}</div>
@@ -397,7 +400,7 @@ body {
         
         <div class="button-container">
             <button class="btn btn-primary" id="openAccountBtn"><i class="fas fa-plus"></i> Open New Account</button>
-            <button class="btn btn-danger" id="deleteAccountBtn"><i class="fas fa-user-times"></i> Request Account Deletion</button>
+            <!-- <button class="btn btn-danger" id="deleteAccountBtn"><i class="fas fa-user-times"></i> Request Account Deletion</button> -->
         </div>
     </div>
     
@@ -415,14 +418,14 @@ body {
             <form id="registrationForm" class="modal-form" action="{{route('createNewBankAccount')}}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="accountType">Account Type</label>
+                    <label for="accountType">Type de compte</label>
                     <select name="type_compte" id="accountType" required>
                         <option value="">Select account type</option>
                         @if(!auth()->user()->comptes()->where('type_compte', 'epargne')->exists())
-                        <option value="epargne">Savings Account</option>
+                        <option value="epargne">Compte d'épargne</option>
                         @endif
                         @if(!auth()->user()->comptes()->where('type_compte', 'professionnel')->exists())
-                        <option value="professionnel">Professional Account</option>
+                        <option value="professionnel">Compte professionnel</option>
                         @endif
                     </select>
                 </div>
@@ -444,7 +447,7 @@ body {
     </div>
     
     <!-- Delete Account Request Modal -->
-    <div id="deleteAccountContainer" class="modal-container">
+    <!-- <div id="deleteAccountContainer" class="modal-container">
         <div class="modal-box">
             <button class="close-btn" id="closeDeleteModal">&times;</button>
             <h2><i class="fas fa-trash-alt"></i> Request Account Deletion</h2>
@@ -485,7 +488,7 @@ body {
                 </div>
             </form>
         </div>
-    </div>
+    </div> -->
     
     <script>
     // New Account Modal
